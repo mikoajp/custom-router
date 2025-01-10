@@ -7,13 +7,9 @@ use Custom\Router\Interfaces\LoaderInterface;
 use Custom\Router\Route;
 use Custom\Router\Exception\RouterException;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 class YamlLoader implements LoaderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(string $resource): RouteCollection
     {
         if (!file_exists($resource)) {
@@ -36,27 +32,24 @@ class YamlLoader implements LoaderInterface
                     $routeData['options'] ?? []
                 );
 
+                if (isset($routeData['methods'])) {
+                    $route->setMethods($routeData['methods']);
+                }
+
                 $routes->add($name, $route);
             }
 
             return $routes;
-        } catch (ParseException $e) {
-            throw new RouterException(sprintf('Error parsing YAML file: %s', $e->getMessage()));
+        } catch (\Exception $e) {
+            throw new RouterException(sprintf('Error loading YAML file: %s', $e->getMessage()));
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(string $resource): bool
     {
-        return pathinfo($resource, PATHINFO_EXTENSION) === 'yaml'
-            || pathinfo($resource, PATHINFO_EXTENSION) === 'yml';
+        return pathinfo($resource, PATHINFO_EXTENSION) === 'yaml';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'yaml';

@@ -26,8 +26,6 @@ class RequestMatcher implements UrlMatcherInterface
 
     public function match(string $path): array
     {
-        $allowedMethods = [];
-
         foreach ($this->routes->all() as $name => $route) {
             $pattern = $this->compilePattern($route->getPath());
 
@@ -35,26 +33,11 @@ class RequestMatcher implements UrlMatcherInterface
                 continue;
             }
 
-            $methods = $route->getDefaults()['methods'] ?? ['GET'];
-            if (!in_array($this->context['method'], $methods)) {
-                $allowedMethods = array_merge($allowedMethods, $methods);
-                continue;
-            }
-
-            $schemes = $route->getDefaults()['schemes'] ?? ['http', 'https'];
-            if (!in_array($this->context['scheme'], $schemes)) {
-                continue;
-            }
-            $host = $route->getDefaults()['host'] ?? null;
-            if ($host !== null && $host !== $this->context['host']) {
+            if (!empty($route->getMethods()) && !in_array($this->context['method'], $route->getMethods())) {
                 continue;
             }
 
             return $this->extractRouteData($name, $route, $matches);
-        }
-
-        if (!empty($allowedMethods)) {
-            throw new MethodNotAllowedException($allowedMethods);
         }
 
         throw new ResourceNotFoundException(sprintf('No route found for path "%s"', $path));

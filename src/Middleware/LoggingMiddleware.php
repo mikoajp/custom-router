@@ -3,10 +3,10 @@
 namespace Custom\Router\Middleware;
 
 use Custom\Router\Interfaces\MiddlewareInterface;
-use Monolog\Level;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
+use Monolog\Level;
 use Throwable;
 
 class LoggingMiddleware implements MiddlewareInterface
@@ -33,6 +33,13 @@ class LoggingMiddleware implements MiddlewareInterface
 
         try {
             $response = $next($request);
+
+            $this->logger->log(Level::Info, 'Matched route', [
+                'route' => $request->attributes->get('_route', 'N/A'),
+                'controller' => $request->attributes->get('_controller', 'N/A'),
+                'params' => $request->attributes->all(),
+                'method' => $request->getMethod()
+            ]);
 
             $this->logger->log(Level::Info, 'Response sent', [
                 'status' => $response->getStatusCode(),
