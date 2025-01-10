@@ -1,0 +1,11 @@
+homepage:
+  path: /
+  defaults:
+    _controller: 'App\Controller\HomeController::index'
+
+blog_post:
+  path: /blog/{slug}
+  defaults:
+    _controller: 'App\Controller\BlogController::show'
+  requirements:
+    slug: '[a-z0-9-]+'
