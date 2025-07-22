@@ -5,6 +5,8 @@ namespace Custom\Router;
 use Custom\Router\Interfaces\RouterInterface;
 use Custom\Router\Collection\RouteCollection;
 use Custom\Router\Matcher\UrlMatcher;
+use Custom\Router\Matcher\FastRouteMatcher;
+use Custom\Router\Cache\MemoryOptimizer;
 use Custom\Router\Generator\UrlGenerator;
 use Custom\Router\Exception\ResourceNotFoundException;
 use Custom\Router\Exception\RouterException;
@@ -26,10 +28,17 @@ class Router implements RouterInterface
     private MiddlewarePipeline $middlewarePipeline;
     private LoggerInterface $logger;
 
-    public function __construct(RouteCollection $routes = null)
+    public function __construct(RouteCollection $routes = null, bool $useFastRoute = true)
     {
         $this->routes = $routes ?? new RouteCollection();
-        $this->matcher = new UrlMatcher($this->routes);
+        
+        // Use FastRoute for better performance if available
+        if ($useFastRoute && class_exists('FastRoute\Dispatcher')) {
+            $this->matcher = new FastRouteMatcher($this->routes);
+        } else {
+            $this->matcher = new UrlMatcher($this->routes);
+        }
+        
         $this->generator = new UrlGenerator($this->routes);
         $this->middlewarePipeline = new MiddlewarePipeline();
 

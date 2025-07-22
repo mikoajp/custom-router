@@ -1,0 +1,83 @@
+# Composer
+/vendor/
+composer.phar
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+/logs/
+*.log
+
+# Cache
+/cache/
+/tmp/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# PHPUnit
+/phpunit.xml
+/.phpunit.result.cache
+/coverage/
+
+# PHP
+*.tmp
+*.temp
+*.cache
+
+# Build artifacts
+/build/
+/dist/
+
+# Documentation build
+/docs/_build/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Test files (temporary)
+tmp_*
+test_*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
